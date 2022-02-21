@@ -2,5 +2,6 @@
     "SERVER_NAME": "BeeCrafty",
     "GET_SERVER_STATUS_ERROR_MESSAGE": "Lo sentimos, el servicio no esta disponible",
     "GET_SERVER_STATUS_NO_AVAILABLE": "Ha ocurrido un error al momento de querer comunicarnos con el servidor",
-    "SERVER_NO_CONNECTION_GENERAL": "Servicio actualmente no disponible"
+    "SERVER_NO_CONNECTION_GENERAL": "Servicio actualmente no disponible",
+    "BAD_RESPONSE_VALUE_EMPTY":"Algunos datos no se han recibido de manera correcta o estan vacios"
 }

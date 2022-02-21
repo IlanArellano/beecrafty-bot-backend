@@ -1,8 +1,8 @@
 export default {
   connectionLimit: 10,
-  host: process.env.MYSQL_AUTH_DB_SERVER,
+  host: process.env.MYSQL_DB_SERVER,
   user: process.env.MYSQL_AUTH_DB_USER,
-  port: Number(process.env.MYSQL_AUTH_DB_PORT),
+  port: Number(process.env.MYSQL_DB_PORT),
   password: process.env.MYSQL_AUTH_DB_PASSWORD,
   database: process.env.MYSQL_AUTH_DB_DATABASE,
 };

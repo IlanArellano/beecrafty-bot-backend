@@ -1,8 +1,9 @@
-const MAIN = '/api';
+const MAIN = `/api/${process.env.API_VERSION}`;
 export const ENDPOINT = {
-    register: MAIN + '/register',
+    link: MAIN + '/link',
     status: MAIN + '/status',
-    online: MAIN + '/online'
+    online: MAIN + '/online',
+    test: MAIN + '/test'
 };
 
 const MOJANG_API = process.env.MOJANG_API;

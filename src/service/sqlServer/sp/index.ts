@@ -1,8 +1,8 @@
 import { output, ERROR_PARAMS, ERROR_RESPONSE } from '../../../types';
-import { getContext } from '../../../db';
+import { getMSSContext } from '../../../db';
 
 export const execSP = async (name: string, params: any[]): Promise<output> => {
-  const pool = await getContext();
+  const pool = await getMSSContext();
     try {
         if (!Array.isArray(params)) return {
             estatus: false,
