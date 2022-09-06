@@ -1,0 +1,17 @@
+export const excludeCommands: string[] = [
+  "stop",
+  "start",
+  "gamemode",
+  "gamerule",
+  "plugins",
+  "op",
+  "deop",
+  "time",
+  "give",
+  "clear",
+  "execute",
+  "fill",
+  "kill",
+  "whitelist",
+  "tp",
+];
