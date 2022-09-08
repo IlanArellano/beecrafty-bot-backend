@@ -3,8 +3,9 @@ export interface output {
   output: any;
 }
 
+
 export interface MySQLNoResOutput {
-  status: number;
+  status: Buffer;
   message: string;
 } 
 

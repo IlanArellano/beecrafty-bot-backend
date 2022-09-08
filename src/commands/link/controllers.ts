@@ -11,7 +11,6 @@ export const postLink = async (req: Request, res: Response) => {
         conn.connect((err) => callbackConnection(err, conn, DB_DATABASES.SERVER));
 
         const body: LinkBody = req.body;
-        console.log({body});
 
         if(CheckEmptyValue(body))
         return res.status(400).json({
@@ -21,12 +20,15 @@ export const postLink = async (req: Request, res: Response) => {
 
         const uuid: string = uuidv4();
         const query = await conn.query('CALL LINK_DISCORD_USERNAME(?,?,?,?,?)', [uuid, body.username, body.username_discord, body.username_discord_id, body.ip]);
-        res.status(200).json(query);
+        // @ts-ignore: Unreachable code error
+        const finalQuery: MySQLNoResOutput[] = query[0] as MySQLNoResOutput[];
+        console.log(finalQuery[0].status.toString());
+        res.status(200).json(finalQuery[0].status.toJSON());
     } catch (error) {
+        console.log(error);
         res.status(500).json({ error: true, message: error});        
     }
     finally {
-        console.log({connState: conn.state});
        if(conn.state === "connected" || conn.state === "authenticated") {
         conn.end();
         EndConnectionMessage(DB_DATABASES.SERVER); 
