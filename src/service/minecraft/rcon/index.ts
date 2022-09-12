@@ -92,7 +92,7 @@ class RCON {
           this.online = false;
         })
         .on("error", (error) => {
-          throw error;
+          reject(error);
         })
         .setTimeout(this.timeout, () => {
           this.socket.destroy();
@@ -130,7 +130,7 @@ class RCON {
    * @param  {String} command
    * @return {Promise} Resolves to response or Rejects an Error if one occured
    */
-  send(command: string): Promise<any> {
+  send(command: string): Promise<string> {
     if (!this.online || !this.authenticated) {
       return Promise.reject(
         new Error("The connection needs to be made and authenticated first!")

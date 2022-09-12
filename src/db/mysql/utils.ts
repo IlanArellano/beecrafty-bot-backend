@@ -4,7 +4,7 @@ import {
   ConnectionError,
   CONSOLE_COLORS,
   MySQLOptions,
-  DBConnectStatus,
+  ConnectionPromise,
 } from "../../types";
 
 const errorDictionary: ConnectionError = {
@@ -15,7 +15,7 @@ const errorDictionary: ConnectionError = {
 };
 export const callbackConnection = (
   err: MysqlError,
-  context: Connection,
+  context: ConnectionPromise,
   server: string
 ): void => {
   if (err) {
@@ -33,11 +33,9 @@ export const callbackConnection = (
 };
 
 /** Crea una instancia de conexion a la base de datos pasandole las opciones de conexion */
-export const getContext = (options: MySQLOptions) => {
-  const context = createConnection(options);
+export const getContext = (options: MySQLOptions): ConnectionPromise => {
+  const context = createConnection(options) as unknown as ConnectionPromise;
 
-  // Promisify Pool Querys
-  // @ts-ignore: Unreachable code error
   context.query = promisify(context.query);
 
   return context;

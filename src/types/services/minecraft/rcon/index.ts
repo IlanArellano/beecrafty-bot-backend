@@ -19,7 +19,7 @@ export interface PacketRead {
 
 export interface RCONPending {
   timer: NodeJS.Timeout;
-  payloads: any[];
+  payloads: string[];
 }
 
 export interface RCONQueque {
