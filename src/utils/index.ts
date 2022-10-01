@@ -21,3 +21,15 @@ export const CheckEmptyValue = (
 
   return valuesEmpty.length > 0;
 };
+
+/**Transforma una funcion sincrona en Promesa */
+export const toPromise = <T>(fn: Function, ...args: any[]): Promise<T> => {
+  return new Promise((resolve, reject) => {
+    try {
+      const res = fn(...args) as T;
+      resolve(res);
+    } catch (error) {
+      reject(error);
+    }
+  });
+};

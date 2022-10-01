@@ -1,9 +1,9 @@
 import { Router } from "express";
 import { ExecuteController } from "./controller";
-import { Headers, CheckAdminExecute } from "../../middlewares";
+import { CheckAdminExecute } from "../../middlewares";
 
 const ExecuteRouter = Router();
 
-ExecuteRouter.post("/", [Headers, CheckAdminExecute], ExecuteController);
+ExecuteRouter.post("/", [CheckAdminExecute], ExecuteController);
 
 export { ExecuteRouter };

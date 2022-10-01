@@ -6,6 +6,7 @@ export const ENDPOINT = {
   test: MAIN + "/test",
   execute: MAIN + "/execute",
   register: MAIN + "/register",
+  unlink: MAIN + "/unlink",
 };
 
 const MOJANG_API = process.env.MOJANG_API;

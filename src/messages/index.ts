@@ -1,6 +1,11 @@
-import * as fs from 'fs';
-import * as path from 'path';
+import * as fs from "fs";
+import * as path from "path";
 
-const file = fs.readFileSync(path.join(`${__dirname}/messages.json`), 'utf8');
+const file: string = fs.readFileSync(
+  path.join(`${__dirname}/messages.json`),
+  "utf8"
+);
 
-export const Messages = JSON.parse(file);
+const Messages: Record<string, string> = JSON.parse(file);
+
+export default Messages;
