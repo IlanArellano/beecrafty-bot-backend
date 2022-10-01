@@ -4,19 +4,9 @@ import {
   MINECRAFT_WHITELIST_ALREADY_SET,
   MINECRAFT_MYSQL_USER_QUERIES,
 } from "../../constants";
-import {
-  get_API_Information,
-  RCON,
-  isValidMinecraftUsername,
-} from "../../service";
-import type {
-  RegisterBody,
-  DBUsers,
-  Api_Response,
-  Player_API_Response,
-  Mode,
-} from "../../types";
-import { PLAYER_API_ENDPOINT } from "../../types";
+import { RCON, isValidMinecraftUsername } from "../../service";
+import type { RegisterBody, DBUsers } from "../../types";
+import replies from "../../messages";
 
 const { insert_user, select_by_discord_id, select_by_public_ip } =
   MINECRAFT_MYSQL_USER_QUERIES;
@@ -26,25 +16,19 @@ export const registerController = async (
   res: Response,
   next: NextFunction
 ) => {
-  const { discord_id, public_ip, username } = req.body as RegisterBody;
-  let errorReponse: any;
-
-  console.log({ ip: req.ip });
+  const { discord_id, username, mode } = req.body as RegisterBody;
+  const public_ip = req.ip;
 
   const rcon = new RCON();
   const pool = getServerContext();
-  let mode: Mode;
 
   try {
+    //Verifica si se envio como plataforma Java o Bedrock
+    if (mode !== "JAVA" && mode !== "BEDROCK")
+      return next("Solo puedes elegir como plataformas Java o Bedrock");
     //Verifica primero si el username de minecraft es valido
-    const validUser = isValidMinecraftUsername(username);
-    if (!validUser)
-      return next({
-        success: false,
-        error_type: 0,
-        response:
-          "El usuario que has ingresado no es valido, verifica que este correctamente escrito y vuelve a intentarlo",
-      });
+    if (!isValidMinecraftUsername(username))
+      return next(replies.NOT_VALID_USER);
 
     //Verifica si no hay un registro existente con el id del usuario de discord
     const CheckDiscordIdRegistered: DBUsers[] = await pool.query(
@@ -52,68 +36,41 @@ export const registerController = async (
       [discord_id]
     );
 
-    if (CheckDiscordIdRegistered.length > 0) {
-      return next({
-        success: false,
-        error_type: 1,
-        response: "Solo se puede hacer un registro por usuario",
-      });
-    }
+    if (CheckDiscordIdRegistered.length > 0)
+      return next("Solo se puede hacer un registro por usuario");
 
     //Verifica si no hay un registro existente con la ip del cliente
-    const CheckIPRegistered: DBUsers[] = await pool.query(select_by_public_ip, [
+    /*  const CheckIPRegistered: DBUsers[] = await pool.query(select_by_public_ip, [
       public_ip,
     ]);
 
     if (CheckIPRegistered.length > 0)
-      return next({
-        success: false,
-        error_type: 2,
-        response: "Solo se puede hacer un registro por ip",
-      });
-
-    //Verifica si el username que mando el usuario pertenece a una cuenta java o bedrock
-    const Java_Player_Info: Api_Response<Player_API_Response> =
-      await get_API_Information(PLAYER_API_ENDPOINT.player + username);
-
-    mode = Java_Player_Info.status === 200 ? "JAVA" : "BEDROCK";
-
-    const finalUsername =
-      mode === "BEDROCK"
-        ? `${process.env.MINECRAFT_SERVER_BEDROCK_PREFIX}${username}`
-        : username;
+      return next("Solo se puede hacer un registro por ip");*/
 
     await rcon.connect(
       process.env.MINECRAFT_SERVER_IP,
       +process.env.MINECRAFT_SERVER_RCON_PORT,
       process.env.MINECRAFT_SERVER_RCON_PASSWORD
     );
-    const response = await rcon.send(`whitelist add ${finalUsername}`);
 
-    if (response === MINECRAFT_WHITELIST_ALREADY_SET)
-      return next({
-        success: false,
-        response,
-      });
+    const cmd: string =
+      mode === "JAVA"
+        ? `whitelist add ${username}`
+        : `fwhitelist add ${username}`;
+    const response = await rcon.send(cmd);
 
-    const InsertRes = await pool.query(insert_user, [
-      finalUsername,
-      discord_id,
-      public_ip,
-      mode,
-    ]);
+    if (response === MINECRAFT_WHITELIST_ALREADY_SET) return next(response);
 
-    console.log({ InsertRes });
+    await pool.query(insert_user, [username, discord_id, public_ip, mode]);
 
     res.json({
       success: true,
-      response,
+      message: response,
     });
   } catch (error) {
     next({
-      success: false,
-      fatal: true,
-      error,
+      error: true,
+      message: error instanceof Error ? error.message : error,
     });
   } finally {
     if (rcon.online && rcon.authenticated) rcon.end();

@@ -1,6 +1,6 @@
 import axios, { AxiosResponse } from "axios";
 import { Api_Response, Error_Response } from "../../types";
-import { Messages } from "../../messages";
+import Messages from "../../messages";
 
 const getEndpoint = (endpoint: string, query?: object) => {
   if (query) {

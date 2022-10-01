@@ -45,10 +45,11 @@ class RCON {
       });
   }
   /**
-   * Ends the connection, but doesn't destroy it
+   * Ends the connection
    */
-  end() {
-    this.socket.end();
+  end(destroy?: boolean) {
+    if (destroy) this.socket.destroy();
+    else this.socket.end();
   }
   /**
    * Immediately sends out as many queued packets as possible

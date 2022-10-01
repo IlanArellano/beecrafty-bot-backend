@@ -3,5 +3,6 @@
     "GET_SERVER_STATUS_ERROR_MESSAGE": "Lo sentimos, el servicio no esta disponible",
     "GET_SERVER_STATUS_NO_AVAILABLE": "Ha ocurrido un error al momento de querer comunicarnos con el servidor",
     "SERVER_NO_CONNECTION_GENERAL": "Servicio actualmente no disponible",
-    "BAD_RESPONSE_VALUE_EMPTY":"Algunos datos no se han recibido de manera correcta o estan vacios"
+    "BAD_RESPONSE_VALUE_EMPTY":"Algunos datos no se han recibido de manera correcta o estan vacios",
+    "NOT_VALID_USER":"El usuario que has ingresado no es valido, verifica que este correctamente escrito y vuelve a intentarlo"
 }

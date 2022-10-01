@@ -12,7 +12,7 @@ export const CheckAdminExecute = (
   const commandSplit: string[] = command.trim().split(/ +/);
   //Si se detecta que el comando esta en la lista de comandos que solo puede ejecutar el administrador entonces le mandara un error
   if (!is_admin && excludeCommands.find((x) => x.includes(commandSplit[0])))
-    return res.status(301).json({
+    return next({
       command,
       success: false,
       output: `Lo sentimos, no tienes permisos suficientes para ejecutar el comando ${commandSplit[0]}`,
