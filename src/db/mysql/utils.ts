@@ -1,9 +1,8 @@
-import { MysqlError, Connection, createConnection } from "mysql";
+import { MysqlError, createConnection, ConnectionConfig } from "mysql";
 import { promisify } from "util";
 import {
   ConnectionError,
   CONSOLE_COLORS,
-  MySQLOptions,
   ConnectionPromise,
 } from "../../types";
 
@@ -33,7 +32,7 @@ export const callbackConnection = (
 };
 
 /** Crea una instancia de conexion a la base de datos pasandole las opciones de conexion */
-export const getContext = (options: MySQLOptions): ConnectionPromise => {
+export const getContext = (options: ConnectionConfig): ConnectionPromise => {
   const context = createConnection(options) as unknown as ConnectionPromise;
 
   context.query = promisify(context.query);

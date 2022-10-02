@@ -7,7 +7,7 @@ const maxCountRequest = 5;
 
 export const RedisRequestLimiter = (client: RedisClientType) => {
   return async (req: Request, res: Response, next: NextFunction) => {
-    const client_ip: string = req.ip;
+    const client_ip: string = req.clientIp;
 
     if (!client.isReady) return next();
 

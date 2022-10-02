@@ -10,7 +10,7 @@ export const ErrorHandler =
   async (err: any, req: Request, res: Response, next: NextFunction) => {
     try {
       if (client.isReady) {
-        const client_ip: string = req.ip;
+        const client_ip: string = req.clientIp;
 
         let obj: RedisRequestHandler;
         const findIp = await client.get(client_ip);

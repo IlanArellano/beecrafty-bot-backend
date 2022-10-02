@@ -8,7 +8,7 @@ import { RCON, isValidMinecraftUsername } from "../../service";
 import type { RegisterBody, DBUsers } from "../../types";
 import replies from "../../messages";
 
-const { insert_user, select_by_discord_id, select_by_public_ip } =
+const { insert_user, select_by_discord_id, select_by_public_ip, active_user } =
   MINECRAFT_MYSQL_USER_QUERIES;
 
 export const registerController = async (
@@ -36,8 +36,14 @@ export const registerController = async (
       [discord_id]
     );
 
-    if (CheckDiscordIdRegistered.length > 0)
-      return next("Solo se puede hacer un registro por usuario");
+    if (CheckDiscordIdRegistered.length > 0) {
+      if (CheckDiscordIdRegistered[0].active)
+        return next("Solo se puede hacer un registro por usuario");
+      if (CheckDiscordIdRegistered[0].attempts >= 2)
+        return next(
+          "Ya te habias unido a este servidor, pero has superado el limite de intentos de registro, para solicitar volver a ingresar a nuestro servidor, favor de contactar a un miembro del staff"
+        );
+    }
 
     //Verifica si no hay un registro existente con la ip del cliente
     /*  const CheckIPRegistered: DBUsers[] = await pool.query(select_by_public_ip, [
@@ -61,7 +67,16 @@ export const registerController = async (
 
     if (response === MINECRAFT_WHITELIST_ALREADY_SET) return next(response);
 
-    await pool.query(insert_user, [username, discord_id, public_ip, mode]);
+    if (CheckDiscordIdRegistered.length === 0)
+      await pool.query(insert_user, [username, discord_id, public_ip, mode]);
+    else
+      await pool.query(active_user, [
+        (CheckDiscordIdRegistered[0].attempts ?? 0) + 1,
+        username,
+        public_ip,
+        mode,
+        discord_id,
+      ]);
 
     res.json({
       success: true,
