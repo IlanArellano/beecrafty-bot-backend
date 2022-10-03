@@ -49,6 +49,8 @@ app.use(ENDPOINT.register, registerRouter);
 app.use(ENDPOINT.execute, ExecuteRouter);
 app.use(ENDPOINT.unlink, unlinkRouter);
 
+console.log({ routes: app._router.stack });
+
 //Error Handler
 // @ts-ignore: Unreachable code error
 app.use(ErrorHandler(RedisClient));
