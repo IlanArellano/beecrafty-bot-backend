@@ -1,5 +1,6 @@
 require("dotenv").config();
 import express from "express";
+import * as os from "os";
 import * as redis from "redis";
 import cors from "cors";
 import {
@@ -49,8 +50,6 @@ app.use(ENDPOINT.register, registerRouter);
 app.use(ENDPOINT.execute, ExecuteRouter);
 app.use(ENDPOINT.unlink, unlinkRouter);
 
-console.log({ routes: app._router.stack });
-
 //Error Handler
 // @ts-ignore: Unreachable code error
 app.use(ErrorHandler(RedisClient));
@@ -58,7 +57,7 @@ app.use(ErrorHandler(RedisClient));
 app.listen(app.get("port"), () => {
   console.log(
     CONSOLE_COLORS.FgGreen,
-    `Server on port ${app.get("port")}`,
+    `Server on ${os.hostname()}:${app.get("port")}`,
     CONSOLE_COLORS.FgWhite
   );
 });
