@@ -1,6 +1,5 @@
 require("dotenv").config();
 import express from "express";
-import * as os from "os";
 import * as redis from "redis";
 import cors from "cors";
 import {
@@ -22,7 +21,9 @@ import requestIP from "request-ip";
 
 //Declarations
 const app = express();
-const RedisClient = redis.createClient();
+const RedisClient = redis.createClient({
+  url: "rediss://red-cct0suen6mptlbrguhog:AeTUOAAA3DuwA0YdtiWMkukqNisn2U5t@oregon-redis.render.com:6379",
+});
 
 //Redis initialization
 RedisClient.connect()
@@ -57,7 +58,7 @@ app.use(ErrorHandler(RedisClient));
 app.listen(app.get("port"), () => {
   console.log(
     CONSOLE_COLORS.FgGreen,
-    `Server on ${os.hostname()}:${app.get("port")}`,
+    `Server on ${app.get("port")}`,
     CONSOLE_COLORS.FgWhite
   );
 });
